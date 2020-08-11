@@ -28,7 +28,7 @@
 		body {
 			background-color: rgb(235, 235, 235) !important;
 			font-family: 'Prompt', sans-serif;
-			color:rgb(83, 83, 83);
+			color: rgb(83, 83, 83);
 		}
 
 		.topic {
@@ -36,14 +36,15 @@
 			margin: 5em 0 3em 0;
 		}
 
-		.myCard{
+		.myCard {
 			background-color: #ffffff;
 			padding: 50px 8vw 6vh 8vw;
 			border-radius: 20px;
 			box-shadow: 5px 5px 20px rgb(0, 0, 0, 0.10);
 		}
 
-		input, input::selection{
+		input,
+		input::selection {
 			border-radius: 20px;
 			width: 100%;
 			border: none !important;
@@ -52,11 +53,11 @@
 			outline: none;
 		}
 
-		h6{
+		h6 {
 			color: rgb(122, 122, 122);
 		}
 
-		p{
+		p {
 			margin-bottom: 0%;
 		}
 	</style>
@@ -87,6 +88,10 @@
 			<p v-for="i in r">
 				<!-- สร้าง loop -->
 				{{n}} x {{i}} = {{multiply(i)}}</p>
+
+			<br>
+			<p>ผลรวม = {{sum(row)}}</p>
+			<hr>
 		</div>
 
 		<p class="text-center" style="margin-top: 15px; color: rgb(156, 156, 156) !important">by Suphakit Nch</p>
@@ -105,6 +110,13 @@
 			methods: {
 				multiply: function (row) {
 					return this.n * row //this. สามารถเรียกใช้ตัวแปรใน data:{} ได้
+				},
+				sum: function (row){
+					let sum = 0
+					for (let i=1;i<=row;i++){
+						sum += this.n*i
+					}
+					return sum
 				}
 			},
 			computed: {
