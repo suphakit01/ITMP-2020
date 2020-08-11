@@ -9,11 +9,16 @@
 <body class="paper">
 	<div id="app">
 		<input type="number" v-model="n">
+		<input type="number" v-model="row">
+
 		<div class="space"></div>
 		<h3>สูตรคูณแม่ {{n}}</h3>
+		<h5>แม่ก่อนหน้า --> แม่ {{before_n}}</h5>
+		<div class="space"></div>
+
 		<h4
-		v-for="i in 12"
-		>{{n}} x {{i}} = {{multiply(i)}}</h4>
+		v-for="i in r"> <!-- สร้าง loop -->
+		{{n}} x {{i}} = {{multiply(i)}}</h4>
 	</div>
 
 	<script>
@@ -21,12 +26,25 @@
 			el:'#app', 
 			data:{
 				n:2,
+				before_n:1,
+				row:12
 			},
 			methods:{
 				multiply: function(row){
-					return this.n*row
+					return this.n*row //this. สามารถเรียกใช้ตัวแปรใน data:{} ได้
 				}
 			},
+			computed:{
+				r: function(){
+					return parseInt(this.row)
+				}
+			},
+			watch:{ //ต้องตั้งชื่อเหมือน Data:{} จับตาดูค่าใน data:{}
+				n: function(a, b){
+					this.before_n = b
+
+				}
+			}
 			// computed:{
 			// 	x2: function(){
 			// 		return this.n*2
