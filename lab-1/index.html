@@ -1,46 +1,119 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Lab - Multimedia Programming 2563 ITKMITL</title>
 	<link rel=stylesheet href="../src/reset.css">
 	<link rel=stylesheet href="lab.css">
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+		integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+		crossorigin="anonymous"></script>
+
+	<!-- font -->
+	<link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+
+	<!-- CSS -->
+	<style>
+		body {
+			background-color: rgb(235, 235, 235) !important;
+			font-family: 'Prompt', sans-serif;
+			color:rgb(83, 83, 83);
+		}
+
+		.topic {
+			color: #b93636;
+			margin: 5em 0 3em 0;
+		}
+
+		.myCard{
+			background-color: #ffffff;
+			padding: 50px 8vw 6vh 8vw;
+			border-radius: 20px;
+			box-shadow: 5px 5px 20px rgb(0, 0, 0, 0.10);
+		}
+
+		input, input::selection{
+			border-radius: 20px;
+			width: 100%;
+			border: none !important;
+			background-color: rgb(240, 240, 240);
+			padding: 10px;
+			outline: none;
+		}
+
+		h6{
+			color: rgb(122, 122, 122);
+		}
+
+		p{
+			margin-bottom: 0%;
+		}
+	</style>
+
 </head>
+
 <body class="paper">
-	<div id="app">
-		<input type="number" v-model="n">
-		<input type="number" v-model="row">
+	<div class="container w-50">
+		<div class="topic text-center">
+			<h1>สูตรคูณสุดมหัศจรรย์🔥</h1>
+		</div>
 
-		<div class="space"></div>
-		<h3>สูตรคูณแม่ {{n}}</h3>
-		<h5>แม่ก่อนหน้า --> แม่ {{before_n}}</h5>
-		<div class="space"></div>
+		<div id="app" class="myCard">
+			<h5>ตัวคูณ</h5>
+			<input type="number" v-model="n">
+			<h5>แถว</h5>
+			<input type="number" v-model="row">
 
-		<h4
-		v-for="i in r"> <!-- สร้าง loop -->
-		{{n}} x {{i}} = {{multiply(i)}}</h4>
+			<br><br>
+			<hr>
+
+
+			<div class="space"></div>
+			<h3>สูตรคูณแม่ {{n}}</h3>
+			<h6>แม่ก่อนหน้าคือ แม่ {{before_n}}</h6>
+			<div class="space"></div>
+
+			<p v-for="i in r">
+				<!-- สร้าง loop -->
+				{{n}} x {{i}} = {{multiply(i)}}</p>
+		</div>
+
+		<p class="text-center" style="margin-top: 15px; color: rgb(156, 156, 156) !important">by Suphakit Nch</p>
 	</div>
+
+	<!-- Script -->
 
 	<script>
 		let app = new Vue({
-			el:'#app', 
-			data:{
-				n:2,
-				before_n:1,
-				row:12
+			el: '#app',
+			data: {
+				n: 2,
+				before_n: 1,
+				row: 12
 			},
-			methods:{
-				multiply: function(row){
-					return this.n*row //this. สามารถเรียกใช้ตัวแปรใน data:{} ได้
+			methods: {
+				multiply: function (row) {
+					return this.n * row //this. สามารถเรียกใช้ตัวแปรใน data:{} ได้
 				}
 			},
-			computed:{
-				r: function(){
+			computed: {
+				r: function () {
 					return parseInt(this.row)
 				}
 			},
-			watch:{ //ต้องตั้งชื่อเหมือน Data:{} จับตาดูค่าใน data:{}
-				n: function(a, b){
+			watch: { //ต้องตั้งชื่อเหมือน Data:{} จับตาดูค่าใน data:{}
+				n: function (a, b) {
 					this.before_n = b
 
 				}
@@ -84,4 +157,5 @@
 
 	</script>
 </body>
+
 </html>
