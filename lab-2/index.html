@@ -5,43 +5,166 @@
     <title>The Members - ITKMITL Multimedia Programming 2563</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link rel="stylesheet" type="text/css" href="lab.css">
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+
+
+    <style>
+        body {
+            background-color: rgb(236, 236, 236);
+            margin-top: 10vh;
+            color: rgb(59, 57, 55) !important;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .myTitle {}
+
+        .myCard {
+            padding: 5vh;
+            border-radius: 20px;
+            background-color: white;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            background-color: rgb(228, 228, 228);
+        }
+
+        .listName {
+            margin: 10px 0 0 0;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="app">
-        <h2 v-for="p in person">{{p.name}}</h2> <!-- v-for ใช้ในการวน loop ข้อมูลทั้งหมดใน name -->
-        <button @click="pullProfile">show</button> <!-- @click (V-on:click) เหมือนกับ onclick กรณีนี้ใช้เรียก methods -->
-        <img :src="pic[0].url" alt="loading...">
+
+    <div class="container">
+        <h1 class="text-center myTitle">CAT'S COMPANY</h1>
+        <p class="text-center mb-5">we are cats family, choose the cat sitter you like.</p>
+
+        <div id="app">
+            <div class="row justify-content-center">
+                <div class="myCard w-50 col-4">
+                    <img class="pro" :src="pic[0].url" alt="loading...">
+                    <h5 class="text-center m-3"><strong>User : {{person[i].username}}</strong></h5>
+                    <hr>
+
+                    <div class="details mt-4">
+                        <p>Name : {{person[i].name}}</p>
+                        <p>Email : {{person[i].email}}</p>
+                        <p>Website : {{person[i].website}}</p>
+                        <p>Company : {{person[i].company.name}}</p>
+                    </div>
+                    <button class="btn btn-outline-primary" @click="pullProfile('prev')">prev</button>
+                    <button class="btn btn-primary" @click="pullProfile('next')">next</button>
+                    <!-- @click (V-on:click) เหมือนกับ onclick กรณีนี้ใช้เรียก methods -->
+                </div>
+
+                <div class="ml-5 col-4">
+                    <h4>Name of sitter</h4>
+                    <p>you can select for more information</p>
+                    <hr>
+                    <p class="listName" v-for="(p, index) in person" @click="pullProfileIndex(index)">
+                        {{index+1 + '. ' + p.name}}</p> <!-- v-for ใช้ในการวน loop ข้อมูลทั้งหมดใน name -->
+                </div>
+                </dov>
+            </div>
+        </div>
+    </div>
+    <div class="card text-center" style="   position: fixed; left: 0; bottom: 0; width: 100%;">
+        <div class="card-footer text-muted">
+            by Suphakit Nch
+        </div>
     </div>
 
     <script>
-        fetch('https://jsonplaceholder.typicode.com/users') //link APIs
+        fetch('https://jsonplaceholder.typicode.com/users')
             .then(response => response.json())
             .then(json => {
                 console.log(json)
-                app.person = json //เก็บ APIs ในรูป string ในตัวแปร person
+                app.person = json
             })
 
         let app = new Vue({
             el: '#app',
             data: {
-                person: [],
-                pic: [{url: ''}]
+                person: [{
+                    "id": 1,
+                    "name": "...",
+                    "username": "...",
+                    "email": "...",
+                    "website": "...",
+                    "company": {
+                        "name": "..."
+                    }
+                }],
+                pic: [{ url: '' }],
+                i: 0
             },
             methods: {
-                pullProfile: function () {
-                    fetch('https://api.thecatapi.com/v1/images/search')
+                pullProfile: function (config) {
+                    if (this.i >= 0 && this.i <= 10) {
+                        if (config == 'prev') {
+                            this.i -= 1;
+                        }
+                        else if (config == 'next') {
+                            this.i += 1;
+                        }
+                    }
+                    else if (this.i > 10) {
+                        this.i = 10;
+                    }
+                    else if (this.i < 0) {
+                        this.i = 0;
+                    }
+
+                    fetch('https://api.thecatapi.com/v1/images/search') //link APIs
                         .then(response => response.json())
                         .then(json => {
                             console.log(json)
-                            app.pic = json
-                            if(this.pic[0].url == null){ //ดัก APIs ที่อาจเกิด error
+                            app.pic = json //เก็บ APIs ในรูป string ในตัวแปร pic
+                            if (this.pic[0].url == null) { //ดัก APIs ที่อาจเกิด error
+                                this.pullProfile()
+                            }
+                        })
+                },
+                pullProfileIndex: function (config) {
+                    this.i = config;
+
+                    fetch('https://api.thecatapi.com/v1/images/search') //link APIs
+                        .then(response => response.json())
+                        .then(json => {
+                            console.log(json)
+                            app.pic = json //เก็บ APIs ในรูป string ในตัวแปร pic
+                            if (this.pic[0].url == null) { //ดัก APIs ที่อาจเกิด error
                                 this.pullProfile()
                             }
                         })
                 }
             },
-            mounted(){
+            mounted() {
                 this.pullProfile() //แสดงผล APIs ทันทีเมื่อมีการเปิด web
             }
         })
