@@ -1,67 +1,119 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Lab - Multimedia Programming 2563 ITKMITL</title>
-	<link rel="stylesheet" type="text/css" href="../src/reset.css">
-	<link rel="stylesheet" type="text/css" href="lab.css">
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-</head>
-<body>
-	<div id="canvas">
-		<section id="canvas_header">
-			<div>
-				-- แสดงคะแนน
-			</div>
-		</section>
-		<section id="canvas_main" 
-		:data-play="play">
-			<main>
-				<div class="box _path" 
-				v-for="i in 14" 
-				:data-pst="i"></div>
-				<div class="box _toggle" data-pst="10" data-isrightarrow="1"></div>
+  <head>
+    <title>Lab - Multimedia Programming 2563 ITKMITL</title>
+    <link rel="stylesheet" type="text/css" href="../src/reset.css" />
+    <link rel="stylesheet" type="text/css" href="lab.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="canvas">
+      <section id="canvas_header">
+        <div>คุณได้ทั้งหมด {{score}} คะแนน</div>
+      </section>
+      <section id="canvas_main" :data-play="play">
+        <main>
+          <div class="box _path" v-for="i in 14" :data-pst="i"></div>
+          <div
+            class="box _toggle"
+            data-pst="10"
+            :data-isrightarrow="isRightArrow"
+          ></div>
 
-				<div class="box _fruit"></div>
+          <div
+            class="box _fruit"
+            :data-pst="f.pst"
+            v-for="f in fruits"
+            :data-type="f.type"
+          ></div>
 
-				<div class="box _origin"></div>
-				<div class="box _12" data-pst="12"></div>
-				<div class="box _16" data-pst="16"></div>
-				
-			</main>
-		</section>
-		<section id="canvas_footer">
-			<div v-if="play" class="btn" id="toggle">
-				Toggle
-			</div>
-			<div v-if="!play" class="btn" id="endgame">
-				Ene Game
-			</div>
-		</section>
-	</div>
+          <div class="box _origin"></div>
+          <div class="box _12" data-pst="12"></div>
+          <div class="box _16" data-pst="16"></div>
+        </main>
+      </section>
+      <section id="canvas_footer">
+        <div v-if="play" class="btn" id="toggle" @click="swap()">เปลี่ยนทิศทาง</div>
+        <div v-if="!play" class="btn" id="endgame" onclick="window.location.reload();">เริ่มเกมใหม่</div>
+      </section>
+    </div>
 
-	<script>
-		function rand(start,stop){
-			let shift = (stop-start)+1
-			return Math.floor(Math.random()*100%shift)+start
-		}
-		
-		let fruitCount = 5
-		let isRightArrow = 1
-		let speed = 1000
-		let app = new Vue({
-			el:'#canvas',
-			data:{
-				play:true,
-				time:0,
-				score:0,
-				fruits:[
-					{id:1,type:13,pst:6,run:true,step:1},
-					{id:2,type:11,pst:3,run:true,step:1},
-					{id:3,type:11,pst:2,run:true,step:1},
-					{id:4,type:13,pst:1,run:true,step:1},
-				]
+    <script>
+      function rand(start, stop) {
+        let shift = stop - start + 1;
+        return Math.floor((Math.random() * 100) % shift) + start;
+      }
+
+      let nextFruidId = 3;
+      let speed = 900;
+      let app = new Vue({
+        el: "#canvas",
+        data: {
+          isRightArrow: 0,
+          speed: speed,
+          play: true,
+          turn: 0,
+          score: 0,
+          fruits: [
+            { id: 1, type: "red", pst: 1, run: true, step: 1 },
+            { id: 2, type: "yellow", pst: 2, run: true, step: 1 },
+          ],
+        },
+        methods: {
+          swap: function () {
+            if (this.isRightArrow == 1) {
+              this.isRightArrow = 0;
+            } else {
+              this.isRightArrow = 1;
+            }
+          },
+        },
+        computed: {},
+        watch: {
+          turn: function () {
+            for (let f in this.fruits) {
+              if (this.fruits[f].run) {
+                this.fruits[f].pst += this.fruits[f].step;
+              }
+              if (this.isRightArrow == 1 && this.fruits[f].pst == 11) {
+				this.fruits[f].pst = 13
+                this.fruits[f].step = 3;
+              }
+              if (this.fruits[f].pst == 12 || this.fruits[f].pst == 16) {
+				if (this.fruits[f].type == 'red' && this.fruits[f].pst == 12 && this.fruits[f].run == true){
+					this.score++
+					this.fruits[f].run = false
+				}
+				else if (this.fruits[f].type == 'yellow' && this.fruits[f].pst == 16 && this.fruits[f].run == true){
+					this.score++
+					this.fruits[f].run = false
+				}else if(this.fruits[f].pst == 12 && this.fruits[f].type == "yellow"){
+              	  clearInterval(playing)
+				  this.play= false
+                }else if(this.fruits[f].pst == 16 && this.fruits[f].type == "red"){
+              	  clearInterval(playing)
+					this.play= false
+                }
+              }  
+            }
+			if (rand(1,10) % 2 == 0){
+				if(rand(1,10)%2 == 0){
+					this.fruits.push({id: nextFruidId,type:'red',pst: 1,run:true,step:1})
+				}else{
+					this.fruits.push({id: nextFruidId,type:'yellow',pst: 1,run:true,step:1})
+				}
+				nextFruidId++
 			}
-		})
-	</script>
-</body>
+          },
+		  score:function(){
+			  this.speed += 5000
+		  }
+        },
+      });
+
+      let playing = setInterval(() => {
+        app.turn++;
+      }, speed);
+    </script>
+  </body>
 </html>

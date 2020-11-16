@@ -67,12 +67,19 @@ div.box{
 	background-color: #333;
 }
 .box._toggle{
-	background-color: yellow;
-	transition: none;
-	opacity: .5;
+	background-image: url('arrow.png');
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-position: center;
+	/* background-color: yellow; */
+	transition: .1s;
+	/* opacity: .5; */
 }
 .box._toggle[data-isrightarrow="0"]{
-	background-color: red;
+	/* background-color: red; */
+	background-image: url('arrow.png');
+	transform: rotate(-90deg);
 }
 
 
@@ -101,7 +108,7 @@ div.box{
 	border: 3px solid #fffc;
 	transform: scale(.6);
 }
-.box._fruit[data-type="11"]{
+.box._fruit[data-type="red"]{
 	background-color: red;
 }
 
