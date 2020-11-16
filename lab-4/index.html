@@ -1,71 +1,99 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Color Game - Multimedia Programming 2563 ITKMITL</title>
-	<link rel="stylesheet" type="text/css" href="../src/reset.css">
-	<link rel="stylesheet" type="text/css" href="lab.css">
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Color Game - Multimedia Programming 2563 ITKMITL</title>
+    <link rel="stylesheet" type="text/css" href="../src/reset.css">
+    <link rel="stylesheet" type="text/css" href="lab.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
+
 <body>
-	<div id="canvas">
-		<section id="canvas_header">
-			<div>
-				เหลือเวลา 10 วินาที
-			</div>
-		</section>
-		<section id="canvas_main">
-			<main>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot style="--l:80%"></a-dot>
-				<a-dot data-pick="true"></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-			</main>
-		</section>
-		<section id="canvas_footer">
-			<div>
-				0 คะแนน
-			</div>
-		</section>
-	</div>
+    <div id="canvas">
+        <section id="canvas_header">
+            <div>
+                เหลือเวลา {{time}} วินาที
+            </div>
+        </section>
+        <section id="canvas_main">
+            <main>
+                <a-dot v-for="i in row*row" :style="{
+                    '--row':row,
+                    '--h':h,
+                    '--l':l+'%'
+                }" :data-pick="i == pick" @click="check(i)"></a-dot>
+            </main>
+        </section>
+        <section id="canvas_footer">
+            <div>
+                {{score}} คะแนน
+            </div>
+        </section>
+        <button style="display: block;margin: 0 auto" onclick="window.location.reload();">เริ่มใหม่</button>
+    </div>
 
-	<script>
-		let picklight = "20%" //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
-		document.registerElement('a-dot') //ให้ vue รู้จัก a-dot
+    <script>
+        let picklight = "70%" //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%w
+        function rand(start, stop) { //สร้างฟังก์ชัน random ไว้ใช้
+            let shift = (stop - start) + 1
+            return Math.floor(Math.random() * 100 % shift) + start
+        }
 
-		function rand(start,stop){//สร้างฟังก์ชัน random ไว้ใช้
-			let shift = (stop-start)+1
-			return Math.floor(Math.random()*100%shift)+start
-		}
+        let app = new Vue({
+            el: '#canvas',
+            data: {
+                stack: 0,
+                row: 2, //จำนวนแถวที่จะมีในรอบนี้
+                h: 240, // hue ในรอบนี้
+                time: 20, //เวลาเริ่มต้น
+                score: 0, //คะแนนเริ่มต้น
+                pick: 2, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
+                l: 60, //ความสว่างของสีทั่วไปในรอบนี้
+            },
+            methods: {
+                check: function (e) { //เก็บค่า e เข้ามา
+                    console.log(e)
+                    this.h = rand(1, 360)
+                    if (e == this.pick) {
+                        this.correct();
+                        this.time += 2
+                    }
+                    else if (e != this.pick) {
+                        this.time -= 3
+                        if (this.time <= 0) {
+                            this.time = 0
+                        }
+                    }
+                    else {
+                        this.pick = rand(1, this.row * this.row);
+                    }
+                },
+                correct: function () {
+                    //เข้าด่านต่อไป
+                    this.stack +=1;
+                    if(this.stack % 2 == 0){
+                        this.row += 1;
+                    }
+                    this.pick = rand(1, this.row * this.row);
+                    this.score += 1;
+                    console.log("Correct!");
+                },
+            }
+        })
+        //ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
+        document.querySelector('#canvas').style.setProperty('--picklight', picklight);
 
-		let app = new Vue({
-			el:'#canvas',
-			data:{
-				row:2, //จำนวนแถวที่จะมีในรอบนี้
-				h:330, // hue ในรอบนี้
-				time:10, //เวลาเริ่มต้น
-				score:0, //คะแนนเริ่มต้น
-				pick:1, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
-				l:30,//ความสว่างของสีทั่วไปในรอบนี้
-			},
-			methods: {
-
-			}
-		})
-		//ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
-		document.querySelector('#canvas').style.setProperty('--picklight',picklight);
-		
-		let counter = setInterval(()=>{
-			if (app.time>0) {
-				app.time--
-			}else{
-				clearInterval(counter)
-			}
-		},1000);
-	</script>
+        let counter = setInterval(() => {
+            if (app.time > 0) {
+                app.time--
+            } else {
+                clearInterval(counter)
+                alert('หมดเวลาแล้วจ้า คุณได้คะแนนทั้งสิ้น :' + app.score + ' คะแนน')
+                app.score = 0;
+                location.reload();
+            }
+        }, 1000);
+    </script>
 </body>
+
 </html>
